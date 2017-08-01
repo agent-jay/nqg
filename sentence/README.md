@@ -13,14 +13,11 @@ See the [paper](https://arxiv.org/abs/1705.00106),
 
 ## Requirements
 
-[Torch7](https://github.com/torch/torch7)
-
-[tds](https://github.com/torch/tds)- Install with luarocks
-
-[npy4th](https://github.com/htwaijry/npy4th)- Installation instructions in the
+- [Torch7](https://github.com/torch/torch7)
+- [tds](https://github.com/torch/tds)- Install with luarocks
+- [npy4th](https://github.com/htwaijry/npy4th)- Installation instructions in the
 link
-
-Python 2.7, numpy
+- Python 2.7, numpy
 
 ```
 conda create -n py27 python=2.7 python
@@ -30,37 +27,43 @@ conda install numpy
 
 ## Sentence-level model
 
-	cd sentence
-
+```
+cd sentence
+```
 
 ### Preprocessing:
 
 #### Generate src/target dictionary
 
-	th preprocess.lua -config config-preprocess
-
+```
+th preprocess.lua -config config-preprocess
+```
 
 #### Generate embedding files (.t7)
 
 If using anaconda, here is where you switch to your python 2.7 environment with
 numpy. Zip files of Glove embeddings can be downloaded [here](https://github.com/stanfordnlp/GloVe) and the txt files should unzipped into a suitable location.
 
-	python preprocess_embedding.py 
-	--embedding  <path to embedding txt file>
-	--dict ./data/qg.{src,tgt}.dict 
-	--output ./data/qg.{src,tgt}.840B.300d.npy 
-    
-    Both src and tgt are needed. Whether or not you even need the embedding is
-    your choice, and this step can be skipped altogether. However, better
-    performance was indicated in the paper when using pretrained embeddings.
-    Also, you have a choice of embeddings. The version used in the paper is
-    Glove 840B word, 300 dimension word vectors. This however blew up RAM usage
-    so I used 6B word, 300 dimension word vectors.
+```
+python preprocess_embedding.py 
+--embedding  <path to embedding txt file>
+--dict ./data/qg.{src,tgt}.dict 
+--output ./data/qg.{src,tgt}.840B.300d.npy 
+```
 
-    Comment out the necessary part of the data/convert.lua script to reflect
-    the choice of embeddings. 
+Both src and tgt are needed. Whether or not you even need the embedding is
+your choice, and this step can be skipped altogether. However, better
+performance was indicated in the paper when using pretrained embeddings.
+Also, you have a choice of embeddings. The version used in the paper is
+Glove 840B word, 300 dimension word vectors. This however blew up RAM usage
+so I used 6B word, 300 dimension word vectors.
 
-	th ./data/convert.lua
+Comment out the necessary part of the data/convert.lua script to reflect
+the choice of embeddings. 
+
+```
+th ./data/convert.lua
+```
 
 After this process completes, move the generated .t7 embedding files to
 data/embs/ (create this folder)
@@ -73,9 +76,9 @@ param to something that reflects your model parameter choices. I've saved my
 changes in config-train-new. Then changes I made are to the save_model and
 pre_word_vecs_enc(dec) parameters.
 
-	th train.lua -config config-train-new
-
-
+```
+th train.lua -config config-train-new
+```
 
 ### Generating:
 
@@ -89,13 +92,17 @@ format:
 config-trans is where you point the model to the file containing sentences that
 you want to generate questions from. I've created a new file- config-trans-new
 
-	th translate.lua -model model/<model file name> -config config-trans-new
+```
+th translate.lua -model model/<model file name> -config config-trans-new
+```
 
 
-## Evaluation
+### Evaluation
 
-	cd qgevalcap
-	./eval.py --out_file <path to output file>
+```
+cd qgevalcap
+./eval.py --out_file <path to output file>
+```
 
 
 ## Acknowledgment
